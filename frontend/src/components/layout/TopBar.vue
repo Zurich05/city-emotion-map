@@ -9,14 +9,22 @@
         <el-option label="模拟" value="mock" />
       </el-select>
       <el-input v-model="filter.district" placeholder="区域" clearable size="small" style="width:140px" />
+      <el-button size="small" @click="signOut">退出</el-button>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import { useFilterStore } from '../../stores/filter'
+import { useRouter } from 'vue-router'
+import { logout } from '../../api/auth'
 defineProps<{ title: string }>()
 const filter = useFilterStore()
+const router = useRouter()
+function signOut() {
+  logout()
+  router.push('/')
+}
 </script>
 
 <style scoped>

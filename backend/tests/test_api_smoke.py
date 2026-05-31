@@ -6,10 +6,16 @@ from app.main import app
 
 
 class ApiSmokeTests(unittest.TestCase):
+    def auth_headers(self, client: TestClient) -> dict:
+        response = client.post("/api/auth/login", json={"username": "admin", "password": "admin123"})
+        token = response.json()["data"]["access_token"]
+        return {"Authorization": f"Bearer {token}"}
+
     def test_demo_import_and_logs(self):
         client = TestClient(app)
+        headers = self.auth_headers(client)
 
-        imported = client.post("/api/import/demo")
+        imported = client.post("/api/import/demo", headers=headers)
         self.assertEqual(imported.status_code, 200)
         self.assertGreaterEqual(imported.json()["data"]["success_count"], 80)
 
@@ -20,15 +26,16 @@ class ApiSmokeTests(unittest.TestCase):
 
     def test_demo_closed_loop(self):
         client = TestClient(app)
+        headers = self.auth_headers(client)
 
-        crawl = client.post("/api/crawl/start", json={"platform": "mock", "keyword": "地铁", "limit": 12})
+        crawl = client.post("/api/crawl/start", json={"platform": "mock", "keyword": "地铁", "limit": 12}, headers=headers)
         self.assertEqual(crawl.status_code, 200)
         self.assertGreater(crawl.json()["data"]["success_count"], 0)
 
-        clean = client.post("/api/clean/run")
+        clean = client.post("/api/clean/run", headers=headers)
         self.assertEqual(clean.status_code, 200)
 
-        sentiment = client.post("/api/sentiment/run")
+        sentiment = client.post("/api/sentiment/run", headers=headers)
         self.assertEqual(sentiment.status_code, 200)
 
         emotions = client.get("/api/emotions")

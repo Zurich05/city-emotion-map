@@ -14,6 +14,11 @@ class Settings:
     sentiment_api_key = os.getenv("SENTIMENT_API_KEY", "")
     sentiment_api_url = os.getenv("SENTIMENT_API_URL", "")
     sentiment_model_name = os.getenv("SENTIMENT_MODEL_NAME", "local-rule-v1")
+    auth_username = os.getenv("AUTH_USERNAME", "admin")
+    auth_password = os.getenv("AUTH_PASSWORD", "admin123")
+    jwt_secret_key = os.getenv("JWT_SECRET_KEY", "change-this-secret-in-production")
+    jwt_algorithm = os.getenv("JWT_ALGORITHM", "HS256")
+    access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "720"))
 
 
 settings = Settings()

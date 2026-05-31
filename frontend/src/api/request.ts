@@ -9,6 +9,12 @@ export interface ApiResult<T> {
 
 const client = axios.create({ baseURL: import.meta.env.VITE_API_BASE || '', timeout: 20000 })
 
+client.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
 export async function getData<T>(url: string, params?: Record<string, unknown>): Promise<T> {
   const response = await client.get<ApiResult<T>>(url, { params })
   if (response.data.code !== 0) throw new Error(response.data.message)

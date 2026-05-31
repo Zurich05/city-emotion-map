@@ -1,19 +1,23 @@
 services:
   backend:
-    image: python:3.12-slim
-    working_dir: /app
+    build:
+      context: ./backend
+    environment:
+      AUTH_USERNAME: ${AUTH_USERNAME:-admin}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:-admin123}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-this-secret-in-production}
+      DATABASE_URL: sqlite:////data/city_emotion.db
     volumes:
-      - ./backend:/app
-    command: sh -c "pip install -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+      - backend-data:/data
     ports:
       - "8000:8000"
   frontend:
-    image: node:20-alpine
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    command: sh -c "npm install && npm run dev"
+    build:
+      context: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
+
+volumes:
+  backend-data:

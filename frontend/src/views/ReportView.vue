@@ -4,8 +4,9 @@
       <div class="panel panel-pad">
         <div class="report-head"><h3 class="section-title">摘要报告</h3><el-button @click="copy">复制</el-button></div>
         <pre>{{ report.summary }}</pre>
-        <el-button @click="download('txt')">导出 TXT</el-button>
-        <el-button @click="download('doc')">导出 DOC</el-button>
+        <el-button @click="downloadText('txt')">导出 TXT</el-button>
+        <el-button @click="downloadNative('pdf')">导出 PDF</el-button>
+        <el-button @click="downloadNative('docx')">导出 DOCX</el-button>
       </div>
       <aside>
         <HotspotCard v-for="item in report.hotspots || []" :key="item.location_name" :item="item" />
@@ -15,12 +16,12 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { fetchReport } from '../api/statistics'
+import { downloadReport, fetchReport } from '../api/statistics'
 import HotspotCard from '../components/cards/HotspotCard.vue'
 import AppLayout from '../components/layout/AppLayout.vue'
 const report = ref<any>({ summary: '', hotspots: [] })
 async function copy() { await navigator.clipboard.writeText(report.value.summary || '') }
-function download(type: 'txt' | 'doc') {
+function downloadText(type: 'txt') {
   const blob = new Blob([report.value.summary || ''], { type: 'text/plain;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
@@ -29,6 +30,7 @@ function download(type: 'txt' | 'doc') {
   anchor.click()
   URL.revokeObjectURL(url)
 }
+async function downloadNative(format: 'pdf' | 'docx') { await downloadReport(format) }
 onMounted(async () => { report.value = await fetchReport() })
 </script>
 <style scoped>

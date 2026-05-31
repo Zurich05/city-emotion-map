@@ -18,6 +18,25 @@ npm install
 npm run dev
 ```
 
-## Docker
+## Docker Compose
 
-当前提供 `docker-compose.yml` 作为扩展起点。生产部署建议补充独立 Dockerfile、反向代理、日志目录、数据库卷和环境变量管理。
+项目已提供后端、前端 Dockerfile 和 `docker-compose.yml`：
+
+```bash
+docker compose up --build
+```
+
+服务：
+
+- 前端：`http://localhost:5173`
+- 后端：`http://localhost:8000`
+
+生产环境必须覆盖：
+
+```env
+AUTH_USERNAME=your-admin
+AUTH_PASSWORD=strong-password
+JWT_SECRET_KEY=long-random-secret
+```
+
+当前 Docker Compose 使用 SQLite 数据卷。更高并发生产场景建议迁移到 PostgreSQL + PostGIS，并接入集中日志、反向代理 HTTPS 和监控告警。

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy.orm import Session
 
 from app.core.response import success
+from app.core.security import require_auth
 from app.database.session import get_db
 from app.models.cleaned_post import CleanedPost
 from app.models.import_log import ImportLog
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/api", tags=["import"])
 
 
 @router.post("/import")
-async def import_file(file: UploadFile = File(...), platform: str = Form("manual"), replace: bool = Form(False), db: Session = Depends(get_db)):
+async def import_file(file: UploadFile = File(...), platform: str = Form("manual"), replace: bool = Form(False), db: Session = Depends(get_db), _: str = Depends(require_auth)):
     if replace:
         db.query(SentimentResult).delete()
         db.query(CleanedPost).delete()
@@ -26,7 +27,7 @@ async def import_file(file: UploadFile = File(...), platform: str = Form("manual
 
 
 @router.post("/import/demo")
-def import_demo(db: Session = Depends(get_db)):
+def import_demo(db: Session = Depends(get_db), _: str = Depends(require_auth)):
     demo_path = Path(__file__).resolve().parents[1] / "data" / "demo_posts.jsonl"
     records = parse_records(demo_path.name, demo_path.read_bytes())
     return success(ImportService(db).import_records(records, task_type="import_demo"))

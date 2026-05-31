@@ -58,5 +58,23 @@
 - 本阶段变更已纳入 Git 自动提交与推送流程。
 
 未实现：
-- PDF 和 DOCX 二进制格式导出仍未实现，目前提供 TXT 和可由 Word 打开的 DOC 文本文件。
 - 热力图仍基于点位强度计算，尚未做网格聚合或行政区面聚合。
+
+## V0.6 认证、原生导出与生产部署基础
+
+已完成：
+- 新增 `POST /api/auth/login`，通过 JWT Bearer Token 保护写操作接口。
+- 文件导入、demo 导入、模拟采集、清洗、情感分析和报告导出接口已启用鉴权。
+- 前端登录页接入真实后端登录，后续 API 请求自动携带 token。
+- 顶部栏新增退出登录。
+- 报告页接入后端原生 PDF / DOCX 导出。
+- 后端新增 PDF / DOCX 二进制报告生成。
+- 新增后端 `Dockerfile`、前端 `Dockerfile`、Nginx 前端代理配置。
+- `docker-compose.yml` 改为 build 模式并使用 SQLite 数据卷。
+- 新增 GitHub Actions CI，覆盖后端测试、后端编译和前端构建。
+- 本阶段变更已完成测试、提交并推送到 GitHub。
+
+未实现：
+- 当前认证是单管理员环境变量账号，尚未实现多用户、角色权限、密码重置和审计后台。
+- Docker Compose 仍使用 SQLite，生产高并发建议迁移 PostgreSQL + PostGIS。
+- CI 尚未加入镜像构建发布、漏洞扫描和部署流水线。
