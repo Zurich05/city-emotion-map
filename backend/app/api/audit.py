@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.response import success
@@ -10,8 +10,24 @@ router = APIRouter(prefix="/api/audit", tags=["audit"])
 
 
 @router.get("/logs")
-def list_audit_logs(limit: int = 100, db: Session = Depends(get_db), _: str = Depends(require_auth)):
-    rows = db.query(OperationLog).order_by(OperationLog.created_at.desc()).limit(limit).all()
+def list_audit_logs(
+    method: str | None = None,
+    path: str | None = None,
+    username: str | None = None,
+    limit: int = Query(100, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+    _: str = Depends(require_auth),
+):
+    query = db.query(OperationLog)
+    if method:
+        query = query.filter(OperationLog.method == method.upper())
+    if path:
+        query = query.filter(OperationLog.path.like(f"{path}%"))
+    if username:
+        query = query.filter(OperationLog.username == username)
+    total = query.count()
+    rows = query.order_by(OperationLog.created_at.desc()).offset(offset).limit(limit).all()
     return success(
         [
             {
@@ -25,5 +41,6 @@ def list_audit_logs(limit: int = 100, db: Session = Depends(get_db), _: str = De
                 "created_at": row.created_at,
             }
             for row in rows
-        ]
+        ],
+        meta={"total": total, "limit": limit, "offset": offset},
     )

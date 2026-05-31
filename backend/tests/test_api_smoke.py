@@ -19,7 +19,7 @@ class ApiSmokeTests(unittest.TestCase):
         self.assertEqual(imported.status_code, 200)
         self.assertGreaterEqual(imported.json()["data"]["success_count"], 80)
 
-        logs = client.get("/api/import/logs")
+        logs = client.get("/api/import/logs", headers=headers)
         self.assertEqual(logs.status_code, 200)
         self.assertGreater(len(logs.json()["data"]), 0)
         self.assertIn("task_type", logs.json()["data"][0])

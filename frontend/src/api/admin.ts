@@ -1,6 +1,6 @@
 import client, { getData } from './request'
 
-export const fetchAuditLogs = () => getData<Array<Record<string, any>>>('/api/audit/logs')
+export const fetchAuditLogs = (params?: Record<string, unknown>) => getData<Array<Record<string, any>>>('/api/audit/logs', params)
 
 export async function downloadBackup() {
   const response = await client.get('/api/backup/export', { responseType: 'blob' })
@@ -11,4 +11,12 @@ export async function downloadBackup() {
   anchor.download = 'city-emotion-backup.json'
   anchor.click()
   URL.revokeObjectURL(url)
+}
+
+export async function restoreBackup(file: File, replace = false) {
+  const form = new FormData()
+  form.append('file', file)
+  form.append('replace', String(replace))
+  const response = await client.post('/api/backup/restore', form)
+  return response.data.data
 }

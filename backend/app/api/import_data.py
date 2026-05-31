@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
 from sqlalchemy.orm import Session
 
 from app.core.response import success
@@ -34,8 +34,24 @@ def import_demo(db: Session = Depends(get_db), _: str = Depends(require_auth)):
 
 
 @router.get("/import/logs")
-def list_logs(limit: int = 50, db: Session = Depends(get_db)):
-    rows = db.query(ImportLog).order_by(ImportLog.start_time.desc()).limit(limit).all()
+def list_logs(
+    task_type: str | None = None,
+    platform: str | None = None,
+    status: str | None = None,
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+    _: str = Depends(require_auth),
+):
+    query = db.query(ImportLog)
+    if task_type:
+        query = query.filter(ImportLog.task_type == task_type)
+    if platform:
+        query = query.filter(ImportLog.platform == platform)
+    if status:
+        query = query.filter(ImportLog.status == status)
+    total = query.count()
+    rows = query.order_by(ImportLog.start_time.desc()).offset(offset).limit(limit).all()
     data = [
         {
             "id": row.id,
@@ -52,4 +68,4 @@ def list_logs(limit: int = 50, db: Session = Depends(get_db)):
         }
         for row in rows
     ]
-    return success(data)
+    return success(data, meta={"total": total, "limit": limit, "offset": offset})

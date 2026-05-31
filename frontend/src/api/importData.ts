@@ -11,4 +11,4 @@ export async function uploadData(file: File, platform: string, replace = false) 
 }
 
 export const importDemoData = () => postData<Record<string, number>>('/api/import/demo')
-export const fetchImportLogs = () => getData<Array<Record<string, any>>>('/api/import/logs')
+export const fetchImportLogs = (params?: Record<string, unknown>) => getData<Array<Record<string, any>>>('/api/import/logs', params)
