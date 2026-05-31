@@ -51,6 +51,27 @@ class UsersRbacTests(unittest.TestCase):
 
         self.assertEqual(denied.status_code, 403)
 
+    def test_viewer_cannot_run_write_tasks_but_analyst_can(self):
+        client = TestClient(app)
+        admin_headers = self.admin_headers(client)
+        viewer_username = f"viewer_{uuid4().hex[:8]}"
+        analyst_username = f"analyst_{uuid4().hex[:8]}"
+        client.post("/api/users", headers=admin_headers, json={"username": viewer_username, "password": "safePass123", "role": "viewer"})
+        client.post("/api/users", headers=admin_headers, json={"username": analyst_username, "password": "safePass123", "role": "analyst"})
+
+        viewer_login = client.post("/api/auth/login", json={"username": viewer_username, "password": "safePass123"})
+        analyst_login = client.post("/api/auth/login", json={"username": analyst_username, "password": "safePass123"})
+        viewer_headers = {"Authorization": f"Bearer {viewer_login.json()['data']['access_token']}"}
+        analyst_headers = {"Authorization": f"Bearer {analyst_login.json()['data']['access_token']}"}
+
+        viewer_clean = client.post("/api/clean/run", headers=viewer_headers)
+        analyst_clean = client.post("/api/clean/run", headers=analyst_headers)
+        analyst_users = client.get("/api/users", headers=analyst_headers)
+
+        self.assertEqual(viewer_clean.status_code, 403)
+        self.assertEqual(analyst_clean.status_code, 200)
+        self.assertEqual(analyst_users.status_code, 403)
+
 
 if __name__ == "__main__":
     unittest.main()

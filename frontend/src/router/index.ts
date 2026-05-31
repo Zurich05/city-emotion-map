@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { currentRole } from '../api/auth'
 
 const routes = [
   { path: '/', component: () => import('../views/LoginView.vue') },
@@ -10,4 +11,10 @@ const routes = [
   { path: '/report', component: () => import('../views/ReportView.vue') }
 ]
 
-export default createRouter({ history: createWebHistory(), routes })
+const router = createRouter({ history: createWebHistory(), routes })
+
+router.beforeEach((to) => {
+  if (to.path === '/users' && currentRole() !== 'admin') return '/dashboard'
+})
+
+export default router

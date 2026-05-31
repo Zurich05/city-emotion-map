@@ -43,3 +43,9 @@
 - `GET /api/audit/logs`
 - `GET /api/backup/export`
 - `POST /api/backup/restore`
+
+角色权限：
+
+- `admin`：可访问全部接口，包括用户管理。
+- `analyst`：可执行数据导入、采集、清洗、情感分析、备份恢复等数据任务。
+- `viewer`：只允许查看地图、统计、热点、报告等只读数据。

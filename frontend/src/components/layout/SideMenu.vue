@@ -1,19 +1,27 @@
 <template>
   <aside class="side">
     <div class="brand">城市情绪地图</div>
-    <router-link v-for="item in items" :key="item.path" :to="item.path">{{ item.label }}</router-link>
+    <router-link v-for="item in visibleItems" :key="item.path" :to="item.path">{{ item.label }}</router-link>
   </aside>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { currentRole } from '../../api/auth'
+
 const items = [
   { path: '/dashboard', label: '仪表盘' },
   { path: '/map', label: '情绪地图' },
   { path: '/analysis', label: '分析' },
   { path: '/data', label: '数据管理' },
-  { path: '/users', label: '用户权限' },
+  { path: '/users', label: '用户权限', adminOnly: true },
   { path: '/report', label: '报告' }
 ]
+
+const visibleItems = computed(() => {
+  const role = currentRole()
+  return items.filter(item => !item.adminOnly || role === 'admin')
+})
 </script>
 
 <style scoped>

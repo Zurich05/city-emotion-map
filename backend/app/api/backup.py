@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from app.core.security import require_auth
+from app.core.security import require_auth, require_roles
 from app.database.session import get_db
 from app.models.cleaned_post import CleanedPost
 from app.models.import_log import ImportLog
@@ -43,7 +43,7 @@ def export_backup(db: Session = Depends(get_db), _: str = Depends(require_auth))
 
 
 @router.post("/restore")
-async def restore_backup(file: UploadFile = File(...), replace: bool = Form(False), db: Session = Depends(get_db), _: str = Depends(require_auth)):
+async def restore_backup(file: UploadFile = File(...), replace: bool = Form(False), db: Session = Depends(get_db), _: object = Depends(require_roles("admin", "analyst"))):
     payload = json.loads((await file.read()).decode("utf-8-sig"))
     if replace:
         db.query(SentimentResult).delete()

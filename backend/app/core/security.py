@@ -76,3 +76,12 @@ def require_admin(current_user: CurrentUser = Depends(require_current_user)) -> 
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Admin role required")
     return current_user
+
+
+def require_roles(*roles: str):
+    def checker(current_user: CurrentUser = Depends(require_current_user)) -> CurrentUser:
+        if current_user.role not in roles:
+            raise HTTPException(status_code=403, detail="Insufficient role")
+        return current_user
+
+    return checker
