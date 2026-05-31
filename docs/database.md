@@ -7,5 +7,6 @@
 - `sentiment_results`：情绪标签、综合分、压力、愉悦、愤怒、平静、模型信息。
 - `area_statistics`：预留聚合统计表。
 - `import_logs`：导入、采集、清洗、分析任务日志。
+- `operation_logs`：受保护接口的用户、方法、路径、状态码、客户端 IP 和时间审计记录。
 
 迁移到 PostgreSQL + PostGIS 时，可将 `lat/lng` 替换或同步为 `geometry(Point, 4326)`，并为时间、平台、区域、空间字段建立索引。

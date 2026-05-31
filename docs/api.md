@@ -23,6 +23,8 @@
 - `GET /api/report`：摘要报告。
 - `GET /api/report/export?format=pdf`：导出 PDF 报告，需要 Bearer Token。
 - `GET /api/report/export?format=docx`：导出 DOCX 报告，需要 Bearer Token。
+- `GET /api/audit/logs`：查看受保护接口操作审计日志，需要 Bearer Token。
+- `GET /api/backup/export`：导出 JSON 数据备份，需要 Bearer Token。
 
 以下写操作接口需要 `Authorization: Bearer <token>`：
 
@@ -32,3 +34,5 @@
 - `POST /api/clean/run`
 - `POST /api/sentiment/run`
 - `GET /api/report/export`
+- `GET /api/audit/logs`
+- `GET /api/backup/export`

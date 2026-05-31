@@ -78,3 +78,21 @@
 - 当前认证是单管理员环境变量账号，尚未实现多用户、角色权限、密码重置和审计后台。
 - Docker Compose 仍使用 SQLite，生产高并发建议迁移 PostgreSQL + PostGIS。
 - CI 尚未加入镜像构建发布、漏洞扫描和部署流水线。
+
+## V0.7 操作审计、数据备份与 PostGIS 预留
+
+已完成：
+- 新增 `operation_logs` 操作审计表。
+- 新增审计中间件，记录受保护接口的用户、方法、路径、状态码、客户端 IP、User-Agent 和时间。
+- 新增 `GET /api/audit/logs`，支持查询操作审计日志。
+- 新增 `GET /api/backup/export`，支持导出 JSON 数据备份。
+- 数据管理页新增操作审计日志表。
+- 数据管理页新增 JSON 备份下载入口。
+- Docker Compose 新增 PostGIS 服务预留，便于后续迁移到 PostgreSQL + PostGIS。
+- 新增后端测试覆盖审计日志和备份导出。
+- 本阶段变更已完成测试、提交并推送到 GitHub。
+
+未实现：
+- 操作审计尚未提供筛选、分页、长期归档和异常告警。
+- JSON 备份暂未提供恢复导入接口。
+- PostGIS 服务已预留，但应用默认仍使用 SQLite；正式迁移还需要迁移脚本和空间索引设计。

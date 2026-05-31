@@ -40,3 +40,5 @@ JWT_SECRET_KEY=long-random-secret
 ```
 
 当前 Docker Compose 使用 SQLite 数据卷。更高并发生产场景建议迁移到 PostgreSQL + PostGIS，并接入集中日志、反向代理 HTTPS 和监控告警。
+
+Compose 文件已包含 `postgis/postgis` 服务作为迁移目标。切换时将后端 `DATABASE_URL` 改为 PostgreSQL 连接串，并执行表结构迁移。
