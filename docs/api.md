@@ -8,6 +8,8 @@
 
 - `GET /api/health`：健康检查。
 - `POST /api/import`：上传 JSON、JSONL、CSV，参数 `file`、`platform`、`replace`。
+- `POST /api/import/demo`：导入后端内置 demo 数据。
+- `GET /api/import/logs`：查看导入、采集、清洗、分析任务日志。
 - `POST /api/crawl/start`：模拟采集，参数 `platform`、`keyword`、`limit`。
 - `POST /api/clean/run`：批量清洗未处理原始文本。
 - `POST /api/sentiment/run`：批量分析未分析清洗文本。

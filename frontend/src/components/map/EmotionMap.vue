@@ -4,13 +4,19 @@
 
 <script setup lang="ts">
 import L from 'leaflet'
+import 'leaflet.heat'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { EmotionPoint } from '../../api/emotion'
+
+declare module 'leaflet' {
+  function heatLayer(latlngs: Array<[number, number, number]>, options?: Record<string, unknown>): Layer
+}
 
 const props = defineProps<{ points: EmotionPoint[]; layer: string }>()
 const mapEl = ref<HTMLDivElement>()
 let map: L.Map | null = null
 let group: L.LayerGroup | null = null
+let heat: L.Layer | null = null
 
 function color(point: EmotionPoint) {
   if (props.layer === '压力') return point.stress_score > .5 ? '#ef4444' : '#f97316'
@@ -25,8 +31,17 @@ function color(point: EmotionPoint) {
 function render() {
   if (!map) return
   group?.remove()
+  if (heat) {
+    heat.remove()
+    heat = null
+  }
   group = L.layerGroup().addTo(map)
-  props.points.filter(p => p.lat && p.lng).forEach(point => {
+  const located = props.points.filter(p => p.lat && p.lng)
+  if (props.layer === '数据密度' || props.layer === '压力') {
+    const heatPoints = located.map(point => [point.lat!, point.lng!, props.layer === '压力' ? Math.max(point.stress_score, .2) : .6] as [number, number, number])
+    heat = L.heatLayer(heatPoints, { radius: 26, blur: 18, maxZoom: 14, gradient: { .2: '#38bdf8', .45: '#facc15', .75: '#fb923c', 1: '#ef4444' } }).addTo(map)
+  }
+  located.forEach(point => {
     L.circleMarker([point.lat!, point.lng!], {
       radius: props.layer === '数据密度' ? 8 : 7,
       color: '#fff',

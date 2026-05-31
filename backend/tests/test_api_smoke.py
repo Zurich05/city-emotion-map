@@ -6,6 +6,18 @@ from app.main import app
 
 
 class ApiSmokeTests(unittest.TestCase):
+    def test_demo_import_and_logs(self):
+        client = TestClient(app)
+
+        imported = client.post("/api/import/demo")
+        self.assertEqual(imported.status_code, 200)
+        self.assertGreaterEqual(imported.json()["data"]["success_count"], 80)
+
+        logs = client.get("/api/import/logs")
+        self.assertEqual(logs.status_code, 200)
+        self.assertGreater(len(logs.json()["data"]), 0)
+        self.assertIn("task_type", logs.json()["data"][0])
+
     def test_demo_closed_loop(self):
         client = TestClient(app)
 

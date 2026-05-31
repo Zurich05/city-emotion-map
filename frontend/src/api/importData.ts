@@ -1,4 +1,4 @@
-import client, { ApiResult } from './request'
+import client, { ApiResult, getData, postData } from './request'
 
 export async function uploadData(file: File, platform: string, replace = false) {
   const form = new FormData()
@@ -9,3 +9,6 @@ export async function uploadData(file: File, platform: string, replace = false) 
   if (response.data.code !== 0) throw new Error(response.data.message)
   return response.data.data
 }
+
+export const importDemoData = () => postData<Record<string, number>>('/api/import/demo')
+export const fetchImportLogs = () => getData<Array<Record<string, any>>>('/api/import/logs')

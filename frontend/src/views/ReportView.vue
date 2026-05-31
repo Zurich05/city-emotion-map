@@ -4,8 +4,8 @@
       <div class="panel panel-pad">
         <div class="report-head"><h3 class="section-title">摘要报告</h3><el-button @click="copy">复制</el-button></div>
         <pre>{{ report.summary }}</pre>
-        <el-button disabled>导出 PDF</el-button>
-        <el-button disabled>导出 DOCX</el-button>
+        <el-button @click="download('txt')">导出 TXT</el-button>
+        <el-button @click="download('doc')">导出 DOC</el-button>
       </div>
       <aside>
         <HotspotCard v-for="item in report.hotspots || []" :key="item.location_name" :item="item" />
@@ -20,6 +20,15 @@ import HotspotCard from '../components/cards/HotspotCard.vue'
 import AppLayout from '../components/layout/AppLayout.vue'
 const report = ref<any>({ summary: '', hotspots: [] })
 async function copy() { await navigator.clipboard.writeText(report.value.summary || '') }
+function download(type: 'txt' | 'doc') {
+  const blob = new Blob([report.value.summary || ''], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = `city-emotion-report.${type}`
+  anchor.click()
+  URL.revokeObjectURL(url)
+}
 onMounted(async () => { report.value = await fetchReport() })
 </script>
 <style scoped>
