@@ -8,6 +8,9 @@
 
 - `GET /api/health`：健康检查。
 - `POST /api/auth/login`：登录获取 Bearer Token，默认开发账号由 `.env` 中 `AUTH_USERNAME`、`AUTH_PASSWORD` 配置。
+- `GET /api/users`：管理员查看用户列表。
+- `POST /api/users`：管理员创建用户，角色支持 `admin`、`analyst`、`viewer`。
+- `PATCH /api/users/{id}`：管理员修改用户角色、启用状态或密码。
 - `POST /api/import`：上传 JSON、JSONL、CSV，参数 `file`、`platform`、`replace`。
 - `POST /api/import/demo`：导入后端内置 demo 数据。
 - `GET /api/import/logs`：查看导入、采集、清洗、分析任务日志。

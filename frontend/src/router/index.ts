@@ -6,6 +6,7 @@ const routes = [
   { path: '/map', component: () => import('../views/MapView.vue') },
   { path: '/analysis', component: () => import('../views/AnalysisView.vue') },
   { path: '/data', component: () => import('../views/DataManageView.vue') },
+  { path: '/users', component: () => import('../views/UserManageView.vue') },
   { path: '/report', component: () => import('../views/ReportView.vue') }
 ]
 

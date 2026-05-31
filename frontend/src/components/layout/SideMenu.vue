@@ -11,6 +11,7 @@ const items = [
   { path: '/map', label: '情绪地图' },
   { path: '/analysis', label: '分析' },
   { path: '/data', label: '数据管理' },
+  { path: '/users', label: '用户权限' },
   { path: '/report', label: '报告' }
 ]
 </script>

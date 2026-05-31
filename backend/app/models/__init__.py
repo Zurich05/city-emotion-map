@@ -4,5 +4,6 @@ from app.models.import_log import ImportLog
 from app.models.operation_log import OperationLog
 from app.models.raw_post import RawPost
 from app.models.sentiment_result import SentimentResult
+from app.models.user import User
 
-__all__ = ["AreaStatistic", "CleanedPost", "ImportLog", "OperationLog", "RawPost", "SentimentResult"]
+__all__ = ["AreaStatistic", "CleanedPost", "ImportLog", "OperationLog", "RawPost", "SentimentResult", "User"]
