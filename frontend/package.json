@@ -1,0 +1,27 @@
+{
+  "name": "city-emotion-map-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "axios": "^1.7.2",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.7.6",
+    "leaflet": "^1.9.4",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.12",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.22"
+  }
+}
