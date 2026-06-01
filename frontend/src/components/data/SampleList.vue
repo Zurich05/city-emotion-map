@@ -7,6 +7,7 @@
     <el-table-column prop="text" label="文本" />
   </el-table>
 </template>
+
 <script setup lang="ts">
 import type { EmotionPoint } from '../../api/emotion'
 defineProps<{ points: EmotionPoint[] }>()

@@ -7,7 +7,17 @@ export function useChart(optionGetter: () => echarts.EChartsOption) {
   const render = () => {
     if (!el.value) return
     chart ||= echarts.init(el.value)
-    chart.setOption(optionGetter())
+    chart.setOption({
+      backgroundColor: 'transparent',
+      textStyle: { color: '#334155', fontSize: 15 },
+      grid: { left: 54, right: 26, top: 42, bottom: 46 },
+      tooltip: {
+        backgroundColor: '#ffffff',
+        borderColor: '#dbe5ef',
+        textStyle: { color: '#334155', fontSize: 15 }
+      },
+      ...optionGetter()
+    })
   }
   onMounted(() => {
     render()
